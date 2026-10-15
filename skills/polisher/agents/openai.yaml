@@ -1,0 +1,4 @@
+interface:
+  display_name: "Polisher"
+  short_description: "Polish Pages previews and a README once, within a strict allowlist."
+  default_prompt: "請使用 $polisher 改善目前 GitHub Pages 專案的社群預覽，並在首次使用時一次性潤飾 README；後續不再維護 README。"

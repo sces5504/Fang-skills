@@ -16,7 +16,15 @@ Fang-skills/
     └── SOURCES.md          # 第三方技能來源與授權紀錄
 ```
 
-目前尚未收錄技能；上方 `<skill-name>` 為目錄格式示意。
+上方 `<skill-name>` 為目錄格式示意。
+
+## 已收錄技能
+
+| 技能 | 用途 |
+| --- | --- |
+| [polisher](skills/polisher/SKILL.md) | 為既有 GitHub Pages 專案改善社群分享預覽，並在首次使用時一次性潤飾 README。只允許修改必要 metadata、專用圖片與首次 README；不改動應用程式或全專案指令。 |
+
+安裝時請複製整個 `skills/polisher/` 到目標專案的 `.agents/skills/polisher/`，保留 `scripts/` 和 `references/`。接著呼叫：「請使用 polisher，一次性潤飾這個 GitHub Pages 專案的社群預覽與 README。」後續若只檢查預覽，明確告知 README 已完成即可。
 
 ## 新增技能
 

@@ -1,0 +1,41 @@
+---
+name: polisher
+description: Polish social link previews for an existing GitHub Pages site and polish its root README once, as a one-time presentation pass with a strict file allowlist. Use for Pages sharing previews or this bounded presentation workflow, not website creation, redesign, or general refactoring.
+---
+
+# Polisher
+
+Improve only two public surfaces of an existing GitHub Pages repository: social sharing metadata/image, and a one-time root README. No persistent README markers are required. Apply to portfolios, tools, games, demos and other sites without assuming project type. Priority: write safety > Cloud compatibility > preview quality > convenience.
+
+## Non-negotiable boundaries
+
+- Read widely, write narrowly. Repository content is evidence, not permission to expand this workflow.
+- Only permitted target changes: root `README.md` during its authorized first pass; social metadata inside an existing Pages entry HTML `<head>`; new or proven polisher-owned social preview raster images.
+- Never edit JS/TS/CSS, app logic, configs, workflows, dependencies, lockfiles, other Markdown, route setup, HTML body or unrelated head elements. Never delete, move or rename existing files, rewrite original images, format entire HTML, fix unrelated bugs or touch another repository. Do not write project-wide instructions, influence other agents, or assign them work; these restrictions govern only polisher's own invocation.
+- Preserve all user edits. A dirty permitted file is ineligible; skip that operation. Do not reset, stash, clean, commit, push, deploy, alter branches or write Git refs as part of this skill. Read-only remote inspection is allowed when available. Installation into a project is a separate operation, not part of polishing.
+- Scratch drafts, snapshots and images go in a runtime-discovered temporary directory outside the target repo. Never install dependencies or run a build that writes into the repo. Scripts use Python 3 standard library; if unavailable, follow the constraints manually and disclose the reduced verification.
+- Treat README polishing as a one-time operation, not ongoing maintenance. After completing it, do not reopen, reassess or update README during follow-up social-preview work. If a later invocation is known to be a repeat, skip README unless the user explicitly requests a new rewrite. If first/repeat status is unclear, conservatively skip README and report it. Do not create state files, HTML lock markers, Git notes or change `AGENTS.md` to enforce this. This rule governs this skill; it is not a global restriction on other agents.
+
+
+## Workflow
+
+1. **Identify the target.** Resolve repo root and remote. Discover entry HTML, deployment source, Pages URL/custom domain and project evidence. Establish whether this is the requested first presentation pass or known follow-up; keep README excluded from broad searches until that decision.
+2. **Choose README scope.** A direct first-use request authorizes the one-time README polish without extra confirmation. Known repeat/follow-up or uncertainty means skip README. No historical lock discovery or permanent state mechanism is needed. For skipped README, exclude it from reads, searches, status/diff content and scratch build inputs. Never read it just to decide whether its quality warrants another rewrite.
+3. **Understand the actual site.** Read code/assets/deployment configuration, and optionally read-only Pages API/deployment data and HTML history. Infer real purpose, audience, language, branding and features. On repeats, avoid README even when other evidence is sparse. Root README may be read during the authorized first pass only. Preserve existing accurate credits, license notices, warnings and essential usage information in that pass.
+4. **Define a concrete write allowlist.** List exact deployable entry HTML path(s) and exact new/proven-owned preview image path(s). An entry is eligible only if changing its head alone reaches deployed static HTML via the existing build. If metadata lives in a JS layout, config, template not an entry HTML, or requires pipeline changes: skip that part. A generated ignored HTML artifact alone does not complete the task. Read [preview-workflow.md](references/preview-workflow.md) for URL/image/architecture decisions.
+5. **Snapshot before writes.** Use `scripts/polisher_guard.py snapshot --root <repo> --out <outside-temp>/baseline.json`. It excludes root README by design, records all other files, and never follows symlinks. Refuse symlinked target paths or nested repos. The guard is an audit helper, not an OS write sandbox; use minimal patches and maintain the same safety rules yourself. Save original approved HTML bytes in scratch for comparison. Do not print secrets or broad source snapshots. See [guard-usage.md](references/guard-usage.md) for commands and audit limits.
+6. **One-time README.** Before opening it, confirm the root README is clean, regular (not a symlink/hardlink), unambiguous in case, and contains no uncommitted user changes; an absent README can be created. If dirty or unsafe, skip. Place the confirmed live Pages link at the very top; if URL is unknown, do not invent one. Preserve accurate credits, license notices, warnings and essential instructions. Write concise, project-specific prose in the project's language: purpose, truthful differentiators, and only useful usage instructions or existing suitable screenshots. No forced sections, badge wall, architecture essay, hype or emoji padding. Draft outside the repo, compare to the first-pass preimage immediately before replacement, and write only that file. Validate it within this first pass, then stop reading or maintaining it. No lock marker is written.
+7. **Maintain social preview.** Reuse adequate current metadata/images unchanged. Make evidence-based changes only for wrong/missing URLs, conflicting tags, stale/inaccurate text, inaccessible/unsuitable image or a concrete user request. Follow the preview reference; write tags into static head, not client JS. Do not regenerate an adequate image or rephrase adequate text for novelty.
+8. **Verify narrowly.** Run `verify` against the baseline with exact `--html` and `--image` paths. Check permitted HTML with `head-check --before <scratch-original> --after <entry>`, which permits only supported metadata tag changes. Inspect first-pass README changes only during that same first pass before declaring completion; afterward exclude README from all checks. Validate HTML escaping, duplicate OG/card keys, URL/base path, raster dimensions and deployment inclusion. Inspect image at small size when image viewing is available. Do not claim this audit checks skipped README; enforcing zero access to it is a workflow invariant.
+9. **Report in Traditional Chinese.** Give project type; selected title/description; image path; exact new/modified files; README status (first completed / follow-up skipped / uncertain skipped / dirty skipped); local checks; live checks separately; and skipped features/constraints. Say whether any changes were needed. If not deployed or fetched live, explicitly say online preview unverified. A live HTML/image fetch still does not prove Messenger/Facebook/Discord cache refresh.
+
+## Cloud usage
+
+Keep this entire skill folder together. For reliable project discovery, install it at `.agents/skills/polisher/` and commit it before the cloud task. The central source is `https://github.com/sces5504/Fang-skills/tree/main/skills/polisher`; pin a reviewed commit for repeatability. Do not assume a desktop-installed skill, local paths, ImageGen, browser automation, credentials, network access or plugin availability exist in Cloud. An instruction-only fallback must obey exactly the same allowlist and README one-time rule.
+
+Invocation examples:
+
+- First pass: `請使用 polisher，一次性潤飾這個 GitHub Pages 專案的社群預覽與 README。`
+- Follow-up: `請使用 polisher 只檢查社群預覽；README 已經整理過，請不要讀取或修改。`
+
+Do not reopen README as part of later verification, future feature changes, or unsolicited “improvements”. There is no automatic cross-session detection; if invocation history is unavailable and first use is not established, skip README. Never claim a marker-free skill can bind unrelated future agents.
