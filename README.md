@@ -22,9 +22,9 @@ Fang-skills/
 
 | 技能 | 用途 |
 | --- | --- |
-| [polisher](skills/polisher/SKILL.md) | 為既有 GitHub Pages 專案改善社群分享預覽，並在首次使用時一次性潤飾 README。只允許修改必要 metadata、專用圖片與首次 README；不改動應用程式或全專案指令。 |
+| [polisher](skills/polisher/SKILL.md) | 改善 README 文案、排版、橫幅與徽章，以及 GitHub Pages 社群分享預覽。橫幅與分享圖可各自設計；不更動應用程式或全專案指令。 |
 
-安裝時請複製整個 `skills/polisher/` 到目標專案的 `.agents/skills/polisher/`，保留 `scripts/` 和 `references/`。接著呼叫：「請使用 polisher，一次性潤飾這個 GitHub Pages 專案的社群預覽與 README。」後續若只檢查預覽，明確告知 README 已完成即可。
+臨時使用不需要安裝：請 Codex 將 `skills/polisher/` 下載到目標專案外的暫存目錄，讀取 `SKILL.md` 並執行。需要長期自動發現技能時，才另行安裝到 `.agents/skills/polisher/`。可直接要求：「請使用 polisher 改善這個專案的 README 文案、排版、橫幅與徽章，以及社群分享預覽。」
 
 ## 新增技能
 

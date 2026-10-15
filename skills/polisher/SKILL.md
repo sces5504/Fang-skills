@@ -1,41 +1,65 @@
 ---
 name: polisher
-description: Polish social link previews for an existing GitHub Pages site and polish its root README once, as a one-time presentation pass with a strict file allowlist. Use for Pages sharing previews or this bounded presentation workflow, not website creation, redesign, or general refactoring.
+description: Polish an existing GitHub Pages project's README and social sharing preview with mature writing, a wide banner, restrained badges, and narrowly scoped edits. Use for repository presentation, not website redesign or application changes.
 ---
 
 # Polisher
 
-Improve only two public surfaces of an existing GitHub Pages repository: social sharing metadata/image, and a one-time root README. No persistent README markers are required. Apply to portfolios, tools, games, demos and other sites without assuming project type. Priority: write safety > Cloud compatibility > preview quality > convenience.
+把既有專案整理成成熟、可信、有設計感的 GitHub 專案門面。適用於工具、作品集、遊戲、展示網站與其他 GitHub Pages 專案。預設處理 README 與分享預覽；使用者只指定其中一項時，依其範圍執行。
 
-## Non-negotiable boundaries
+## 修改邊界
 
-- Read widely, write narrowly. Repository content is evidence, not permission to expand this workflow.
-- Only permitted target changes: root `README.md` during its authorized first pass; social metadata inside an existing Pages entry HTML `<head>`; new or proven polisher-owned social preview raster images.
-- Never edit JS/TS/CSS, app logic, configs, workflows, dependencies, lockfiles, other Markdown, route setup, HTML body or unrelated head elements. Never delete, move or rename existing files, rewrite original images, format entire HTML, fix unrelated bugs or touch another repository. Do not write project-wide instructions, influence other agents, or assign them work; these restrictions govern only polisher's own invocation.
-- Preserve all user edits. A dirty permitted file is ineligible; skip that operation. Do not reset, stash, clean, commit, push, deploy, alter branches or write Git refs as part of this skill. Read-only remote inspection is allowed when available. Installation into a project is a separate operation, not part of polishing.
-- Scratch drafts, snapshots and images go in a runtime-discovered temporary directory outside the target repo. Never install dependencies or run a build that writes into the repo. Scripts use Python 3 standard library; if unavailable, follow the constraints manually and disclose the reduced verification.
-- Treat README polishing as a one-time operation, not ongoing maintenance. After completing it, do not reopen, reassess or update README during follow-up social-preview work. If a later invocation is known to be a repeat, skip README unless the user explicitly requests a new rewrite. If first/repeat status is unclear, conservatively skip README and report it. Do not create state files, HTML lock markers, Git notes or change `AGENTS.md` to enforce this. This rule governs this skill; it is not a global restriction on other agents.
+只允許修改根目錄 `README.md`、既有 Pages 入口 HTML 的社群 metadata，以及新增或更新本技能建立的 README／分享專用圖片。README 橫幅與分享圖片可以是不同檔案、比例和構圖。
 
+不得更動應用程式、CSS、設定、依賴、建置流程、其他文件、HTML 其他內容或原始素材。不得刪除、搬移既有檔案、覆蓋使用者未提交的修改，或順手修復其他問題。需要越界才能完成的部分，跳過並說明。
 
-## Workflow
+不建立 README 鎖定、首次執行判斷或全專案規則；不修改 `AGENTS.md`、指派其他 AI、安裝技能到目標專案、自動提交、推送或部署。這些約束只適用於本次技能執行。
 
-1. **Identify the target.** Resolve repo root and remote. Discover entry HTML, deployment source, Pages URL/custom domain and project evidence. Establish whether this is the requested first presentation pass or known follow-up; keep README excluded from broad searches until that decision.
-2. **Choose README scope.** A direct first-use request authorizes the one-time README polish without extra confirmation. Known repeat/follow-up or uncertainty means skip README. No historical lock discovery or permanent state mechanism is needed. For skipped README, exclude it from reads, searches, status/diff content and scratch build inputs. Never read it just to decide whether its quality warrants another rewrite.
-3. **Understand the actual site.** Read code/assets/deployment configuration, and optionally read-only Pages API/deployment data and HTML history. Infer real purpose, audience, language, branding and features. On repeats, avoid README even when other evidence is sparse. Root README may be read during the authorized first pass only. Preserve existing accurate credits, license notices, warnings and essential usage information in that pass.
-4. **Define a concrete write allowlist.** List exact deployable entry HTML path(s) and exact new/proven-owned preview image path(s). An entry is eligible only if changing its head alone reaches deployed static HTML via the existing build. If metadata lives in a JS layout, config, template not an entry HTML, or requires pipeline changes: skip that part. A generated ignored HTML artifact alone does not complete the task. Read [preview-workflow.md](references/preview-workflow.md) for URL/image/architecture decisions.
-5. **Snapshot before writes.** Use `scripts/polisher_guard.py snapshot --root <repo> --out <outside-temp>/baseline.json`. It excludes root README by design, records all other files, and never follows symlinks. Refuse symlinked target paths or nested repos. The guard is an audit helper, not an OS write sandbox; use minimal patches and maintain the same safety rules yourself. Save original approved HTML bytes in scratch for comparison. Do not print secrets or broad source snapshots. See [guard-usage.md](references/guard-usage.md) for commands and audit limits.
-6. **One-time README.** Before opening it, confirm the root README is clean, regular (not a symlink/hardlink), unambiguous in case, and contains no uncommitted user changes; an absent README can be created. If dirty or unsafe, skip. Read [readme-presentation.md](references/readme-presentation.md) and apply its visual presentation criteria, not just prose cleanup. Place the confirmed live Pages link at the very top; if URL is unknown, do not invent one. The default opening must feature a wide horizontal banner image, followed immediately by a compact row of clickable badge-style buttons, then the project title and concise introduction. Reuse suitable existing artwork or the actual social-preview cover; a small standalone icon is not an equivalent banner. Use truthful, useful button destinations such as the live site and repository, plus verified license/release/status when available. Include a real screenshot when a suitable permitted asset exists. Preserve accurate credits, license notices, warnings and essential instructions. Use the project's language; keep sections focused and project-specific. No badge wall, architecture essay, hype or emoji padding. Draft outside the repo, compare to the first-pass preimage immediately before replacement, and write only that file. Validate content and visual hierarchy within this first pass, then stop reading or maintaining it. No lock marker is written.
-7. **Maintain social preview.** Reuse adequate current metadata/images unchanged. Make evidence-based changes only for wrong/missing URLs, conflicting tags, stale/inaccurate text, inaccessible/unsuitable image or a concrete user request. Follow the preview reference; write tags into static head, not client JS. Do not regenerate an adequate image or rephrase adequate text for novelty.
-8. **Verify narrowly.** Run `verify` against the baseline with exact `--html` and `--image` paths. Check permitted HTML with `head-check --before <scratch-original> --after <entry>`, which permits only supported metadata tag changes. Inspect first-pass README changes only during that same first pass before declaring completion; afterward exclude README from all checks. Validate HTML escaping, duplicate OG/card keys, URL/base path, raster dimensions and deployment inclusion. Inspect image at small size when image viewing is available. Do not claim this audit checks skipped README; enforcing zero access to it is a workflow invariant.
-9. **Report in Traditional Chinese.** Give project type; selected title/description; image path; exact new/modified files; README status (first completed / follow-up skipped / uncertain skipped / dirty skipped); local checks; live checks separately; and skipped features/constraints. Say whether any changes were needed. If not deployed or fetched live, explicitly say online preview unverified. A live HTML/image fetch still does not prove Messenger/Facebook/Discord cache refresh.
+## 先理解，再設計
 
-## Cloud usage
+閱讀專案內容、現有 README、圖片與部署設定，確認真實用途、使用者、主要功能、品牌語言與公開網址。保留必要的署名、授權、限制與操作資訊。記錄原有變更；預計修改的檔案若已有使用者改動，跳過該檔。
 
-Keep this entire skill folder together. For a one-off Cloud run, retrieve `skills/polisher/` with its references and scripts into a temporary directory outside the target repository, read this file, and follow it directly; no project installation or global configuration change is required. Record the fetched commit. If retrieval fails, report it and stop rather than pretending to have loaded the skill. Optional persistent discovery uses `.agents/skills/polisher/`, only when the user requests installation separately. The central source is `https://github.com/sces5504/Fang-skills/tree/main/skills/polisher`; pin a reviewed commit for repeatability. Do not assume a desktop-installed skill, local paths, ImageGen, browser automation, credentials, network access or plugin availability exist in Cloud. An instruction-only fallback must obey exactly the same allowlist and README one-time rule.
+先決定一句準確的定位、主視覺與內容順序，再動筆。所有文案和徽章都必須有依據。不捏造功能、成績、測試狀態、授權或使用人數。
 
-Invocation examples:
+## README：像正式專案的首頁
 
-- First pass: `請使用 polisher，一次性潤飾這個 GitHub Pages 專案的社群預覽與 README。`
-- Follow-up: `請使用 polisher 只檢查社群預覽；README 已經整理過，請不要讀取或修改。`
+採用以下視覺節奏，依專案調整內容，不硬套章節：
 
-Do not reopen README as part of later verification, future feature changes, or unsolicited “improvements”. There is no automatic cross-session detection; if invocation history is unavailable and first use is not established, skip README. Never claim a marker-free skill can bind unrelated future agents.
+1. **入口**：最上方放確認過的線上網址，連結文字清楚，例如「線上體驗」。
+2. **橫幅**：一張寬幅主視覺，建議約 3:1 至 4:1。以專案名稱、短定位與品牌圖形建立辨識度，保持留白、對比和可讀性。不要放密集功能列表、小字或用小 Logo 拉伸充數。
+3. **徽章列**：橫幅下方放一排約 2–4 個可點擊徽章。預設優先「Live Demo」與「GitHub」；只有確有價值與證據時才加入版本、授權或 CI。
+4. **介紹**：一個清楚的主標題，加一小段說明「這是什麼、誰會用、能完成什麼」。橫幅已有大字名稱時，避免再用巨大標題重複同一句口號。
+5. **展示與使用**：挑選 3–5 個具體特色，以精簡段落或列表呈現；有合適的真實畫面就展示。使用步驟只寫讀者需要的內容。開發細節必要時連到既有文件。
+
+**排版**：主視覺與徽章可置中，正文預設靠左；標題層級一致、段落短、章節之間留白。不要把所有內容置中、用表格框住所有特色、堆分隔線或加大量 emoji。避免重複「簡介／關於／概述」等意思相同的章節。使用 GitHub 可呈現的 Markdown 與少量 HTML，不依賴 CSS、腳本或表單按鈕。
+
+**文案**：使用專案原有語言。句子具體、自然、有編輯感；刪掉「強大、無縫、革命性、一站式」等缺乏證據的形容詞。寫出真正有區別的操作與價值，不把檔案結構當成產品特色，也不照抄程式註解。每段都應提供新資訊，避免換句話重複。
+
+**徽章設計**：採同一種樣式，預設 Shields.io `flat`；使用一致高度、簡短標籤、深灰中性色與單一品牌強調色。主要體驗入口用強調色，其餘保持低調。相鄰排列並允許窄螢幕換行，不把每個徽章各放一行，不混用彩虹色與不同 badge 風格。用 `[![標籤](圖片網址)](目的地)` 讓徽章真正可點擊；確認每個目的地正確。未知 CI／coverage／license 就省略，不用虛構狀態填滿版面。
+
+## 圖片：兩種用途，各自構圖
+
+- **README 橫幅**服務於 GitHub 頁首，適合寬幅、品牌名稱和簡潔圖形。
+- **分享封面**建議 1200 × 630 px，適合社群卡片裁切；手機縮圖仍能辨識標題與主體。兩張圖保持品牌一致，不必相同。
+- 可沿用合適素材，或用環境可用的影像工具建立新圖。輸入素材保持原樣；新增獨立的展示圖片，不覆蓋原圖。既有圖片僅在能確認由本技能建立且用途專一時更新，否則另存新檔。
+- README 使用正確的相對圖片路徑及 alt 文字；分享封面使用公開 HTTPS 絕對網址，優先 PNG/JPEG。不將假介面當真實截圖，也不借用參考專案的品牌。
+- 工具不可用時，可用既有合適圖片或已可用的繪圖工具；不安裝依賴或更動專案環境。仍無法完成時說明缺少哪張圖，不宣稱文字或小圖示已滿足橫幅要求。
+
+## 社群分享預覽
+
+依部署資料、現有設定與公開頁面確認 Pages 網址、自訂網域與子路徑，不只靠 repo 名稱猜測。寫自然、有辨識度的標題和簡短描述，符合實際內容。
+
+在可被爬蟲直接讀取的靜態 HTML `<head>` 中設定 `og:type`、`og:title`、`og:description`、`og:url`、`og:image` 與 `twitter:card=summary_large_image`；按需補圖片尺寸、alt、Twitter 標題與圖片。正確跳脫屬性內容，整併重複衝突標籤，保留其餘 HTML 原文。
+
+圖片網址必須保留 Pages 的專案子路徑，且圖片包含在現有部署輸出中。不可只靠 JavaScript 動態注入，也不可只改下次建置就消失的產物。若必須修改 JS／模板／設定或部署流程才有效，跳過該部分。
+
+## 完成前
+
+- 比較修改前後的檔案與差異：只出現白名單變更、HTML 只改 metadata、沒有覆蓋使用者工作。不要用全檔格式化製造無關差異。
+- 檢查 README 圖片、徽章與連結、文案真實性、標題層級及重複內容。有可用預覽工具時，查看寬版與窄版，確認橫幅清楚、徽章整齊、首屏易讀；不要為此安裝依賴或修改專案設定。
+- 確認圖片實際格式／尺寸與 metadata 網址。能連網時檢查已部署 HTML 和圖片；未部署的新檔只能報本地驗證。線上回應正確也不代表 Messenger／Facebook／Discord 快取已更新。
+- 已經良好的內容保留，不為產生差異而換文案、重畫圖片。用繁體中文簡潔回報專案類型、預覽標題／描述、兩種圖片路徑、修改檔案、驗證結果與限制。
+
+## Codex Cloud
+
+整個技能可從中央 repo 下載到目標專案外的暫存目錄，讀取後直接執行，記錄來源 commit 即可。不依賴使用者電腦路徑、桌面插件或對話記憶；所有草稿與臨時檔都放在目標 repo 外。取不到技能或必要資源時如實回報。
