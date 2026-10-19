@@ -45,6 +45,10 @@ Fang-skills 收錄我持續整理的 Agent Skills，將可重複的工作方法�
 
 完整清單以 **[skills/](skills/)** 與產生器的即時目錄為準。
 
+## 小工具（Tools）
+
+- **[ff-tool — FFmpeg 影片壓縮指令產生器](https://sces5504.github.io/Fang-skills/tools/ffmpeg-compressor/)**：依片長、MB／MiB 目標與音訊預算產生 macOS／PowerShell 兩次編碼腳本，支援批次。只在瀏覽器內產生文字，不上傳影片。原始碼與維護說明位於 [tools/ffmpeg-compressor/](tools/ffmpeg-compressor/)。
+
 ## 新增與維護
 
 每個技能放在 `skills/<skill-name>/`，其中 `SKILL.md` 至少包含 `name`、`description` 和操作指引；需要時再加入 `scripts/`、`references/` 或 `assets/`。資料夾名稱使用小寫英文字母、數字與連字號，並與技能名稱一致。技能應自成一體，避免依賴個人電腦的絕對路徑。
