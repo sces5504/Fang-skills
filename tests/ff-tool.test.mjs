@@ -55,6 +55,8 @@ test('output names, original preservation, duplicates and empty input', () => {
   assert.throws(()=>validateJobs([{path:'x.mp4',duration:'invalid'}],DEFAULTS));
   assert.throws(()=>validateJobs([{path:'bad"name.mp4'}],{platform:'windows'}),/Windows 檔名/);
   assert.equal(validateJobs([{path:'./video.mp4',duration:''}],DEFAULTS)[0].budget,null);
+  assert.equal(validateJobs([{path:' leading space.mp4'}],DEFAULTS)[0].input,' leading space.mp4');
+  assert.throws(()=>validateJobs([{path:'bad.mp4\n'}],DEFAULTS),/控制字元/);
 });
 test('shell literals roundtrip all required POSIX special characters without execution', () => {
   for (const shell of ['/bin/bash','/bin/zsh']) {

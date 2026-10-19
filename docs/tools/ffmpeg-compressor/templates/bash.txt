@@ -3,6 +3,8 @@
 # Requires ffmpeg/libx264, ffprobe, awk. Source files are never overwritten.
 (
 set -u
+trap 'exit 130' INT
+trap 'exit 143' TERM
 export LC_ALL=C
 for tool in ffmpeg ffprobe awk mktemp link; do
   if ! command -v "$tool" >/dev/null 2>&1; then printf 'Missing required command: %s\n' "$tool" >&2; exit 1; fi

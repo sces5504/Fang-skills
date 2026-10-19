@@ -64,8 +64,8 @@ export const quoteSh = value => "'" + safeText(value).replaceAll("'", "'\"'\"'")
 export const quotePS = value => "'" + safeText(value).replace(/['\u2018\u2019\u201a\u201b]/g, character => character + character) + "'";
 export function outputPath(input, settingsInput, custom = '') {
   const settings = normalizeSettings(settingsInput);
-  if (custom.trim()) return safeText(custom.trim());
-  const value = safeText(input.trim());
+  if (custom.trim()) return safeText(custom);
+  const value = safeText(input);
   const separator = settings.platform === 'windows' ? Math.max(value.lastIndexOf('/'),value.lastIndexOf('\\')) : value.lastIndexOf('/');
   const directory = value.slice(0,separator+1);
   const base = value.slice(separator+1);
@@ -78,10 +78,10 @@ export function validateJobs(rows, settingsInput) {
   if (!rows.length) throw new Error('請至少加入一支影片。');
   const outputs = new Set();
   const canonical = value => settings.platform === 'windows' ? value.replaceAll('/','\\').toLowerCase() : value;
-  const inputs = rows.map(row => canonical(String(row.path).trim()));
+  const inputs = rows.map(row => canonical(String(row.path ?? '')));
   return rows.map((row,index) => {
-    const input = safeText(String(row.path).trim());
-    if (!input) throw new Error(`影片 ${index+1}：請填本機完整路徑或明確的相對路徑，檔名不會自動成為完整路徑。`);
+    const input = safeText(String(row.path ?? ''));
+    if (!input.trim()) throw new Error(`影片 ${index+1}：請填本機完整路徑或明確的相對路徑，檔名不會自動成為完整路徑。`);
     const output = outputPath(input,settings,row.output || '');
     if (!/\.mp4$/i.test(output)) throw new Error(`影片 ${index+1}：輸出副檔名須為 .mp4。`);
     if (settings.platform === 'windows' && /["<>|?*]/.test(input+output)) throw new Error('Windows 檔名不能包含雙引號、< > | ? *。請使用有效的本機路徑。');

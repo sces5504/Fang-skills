@@ -67,6 +67,6 @@ node --test tests/*.test.mjs
 
 本機預覽可在 repo 根目錄執行 `python3 -m http.server 8765 --directory docs`，開啟 `/tools/ffmpeg-compressor/`。所有資源都使用相對路徑，適用 project Pages 子路徑。
 
-測試需 Node.js 20+。有 FFmpeg 時會額外跑短合成影片的實際 two-pass、解碼、尺寸、音軌、原檔保留、錯誤清理與同時任務；沒有 FFmpeg 會明確跳過這些測試。此開發環境沒有 Windows／pwsh：PowerShell 已做字串引用、腳本結構與下載 BOM 的靜態驗證，**尚未在 Windows 實際轉檔**。Windows 實機驗證仍應包含特殊字元路徑、音軌、失敗清理和不覆寫輸出。
+測試需 Node.js 20+。有 FFmpeg 時會額外跑短合成影片的實際 two-pass、解碼、尺寸、音軌、原檔保留、錯誤清理與同時任務；沒有 FFmpeg 會明確跳過這些測試。此開發環境為 macOS；另設 Windows CI，以 Windows PowerShell 5.1 實際驗證字串引用、語法解析、中文與特殊字元路徑、two-pass、有聲／無聲、直式縮放、解碼、暫存清理與既有輸出拒絕。PowerShell 7 未單獨執行測試；也未涵蓋所有外接磁碟格式與 Windows 權限配置。最新通過與否以 PR checks 為準。
 
 依據：[FFmpeg CLI](https://ffmpeg.org/ffmpeg.html)、[scale filter](https://ffmpeg.org/ffmpeg-filters.html#scale-1)、[PowerShell quoting](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_quoting_rules)。
