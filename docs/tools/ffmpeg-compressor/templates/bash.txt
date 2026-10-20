@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# ff-tool: run with bash ff-tool.sh (also safe to paste into zsh/bash).
+# Requires ffmpeg/libx264, ffprobe, awk. Source files are never overwritten.
+(
+set -u
+trap 'exit 130' INT
+trap 'exit 143' TERM
+export LC_ALL=C
+for tool in ffmpeg ffprobe awk mktemp link; do
+  if ! command -v "$tool" >/dev/null 2>&1; then printf 'Missing required command: %s\n' "$tool" >&2; exit 1; fi
+done
+target_bytes=@@TARGET_BYTES@@
+ratio=@@RATIO@@
+audio_mode=@@AUDIO_MODE@@
+audio_kbps=@@AUDIO_KBPS@@
+preset=@@PRESET@@
+filter=@@FILTER@@
+fps=@@FPS@@
+compress() (
+  input=$1; output=$2; manual_seconds=$3; workdir=''
+  cleanup() { if [ -n "$workdir" ] && [ -d "$workdir" ]; then rm -rf -- "$workdir"; fi; }
+  trap cleanup EXIT
+  trap 'exit 130' INT
+  trap 'exit 143' TERM
+  case "$input" in '~/'*) input="$HOME/${input#\~/}";; esac
+  case "$output" in '~/'*) output="$HOME/${output#\~/}";; esac
+  case "$input" in /*) ;; *) input="$PWD/$input";; esac
+  case "$output" in /*) ;; *) output="$PWD/$output";; esac
+  printf '\n[START] %s\n' "$input"
+  if [ ! -f "$input" ]; then printf '[FAIL] Source does not exist.\n' >&2; exit 1; fi
+  if [ -e "$output" ] || [ -L "$output" ]; then printf '[FAIL] Output exists; choose a new name: %s\n' "$output" >&2; exit 1; fi
+  outdir=$(dirname -- "$output")
+  if [ ! -d "$outdir" ]; then printf '[FAIL] Output directory does not exist: %s\n' "$outdir" >&2; exit 1; fi
+  dimensions=$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0:s=x -i "$input") || exit 1
+  if ! printf '%s\n' "$dimensions" | awk -Fx 'NR==1 {if ($1+0<2 || $2+0<2) exit 1; found=1} END {if(!found) exit 1}'; then printf '[FAIL] No usable video stream.\n' >&2; exit 1; fi
+  seconds=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 -i "$input") || exit 1
+  if ! awk -v n="$seconds" 'BEGIN {exit !(n ~ /^[0-9]+([.][0-9]+)?$/ && n+0>0)}'; then seconds=$manual_seconds; fi
+  if ! awk -v n="$seconds" 'BEGIN {exit !(n ~ /^[0-9]+([.][0-9]+)?$/ && n+0>0)}'; then printf '[FAIL] Duration unavailable; supply a valid manual duration.\n' >&2; exit 1; fi
+  audio_index=$(ffprobe -v error -select_streams a:0 -show_entries stream=index -of csv=p=0 -i "$input") || exit 1
+  actual_audio=0
+  if [ "$audio_mode" = keep ] && [ -n "$audio_index" ]; then actual_audio=$audio_kbps; fi
+  video_kbps=$(awk -v b="$target_bytes" -v r="$ratio" -v t="$seconds" -v a="$actual_audio" 'BEGIN {v=int((b*r*8/t-a*1000)/1000); if(v<16) exit 1; printf "%.0f",v}') || { printf '[FAIL] Insufficient video budget (<16 kbps). Increase target or remove audio.\n' >&2; exit 1; }
+  printf 'Duration %s s | video %s kbps | audio %s kbps\n' "$seconds" "$video_kbps" "$actual_audio"
+  workdir=$(mktemp -d "$outdir/.ff-tool.XXXXXXXX") || exit 1
+  common=(-nostdin -hide_banner -loglevel error -i "$input" -map 0:v:0 -map_metadata -1 -map_chapters -1 -c:v libx264 -b:v "${video_kbps}k" -preset "$preset" -pix_fmt yuv420p -vf "$filter" -passlogfile "$workdir/pass")
+  if [ "$fps" != source ]; then common+=(-r "$fps"); fi
+  if ! ffmpeg "${common[@]}" -pass 1 -an -f null /dev/null; then printf '[FAIL] Pass 1 failed; pass 2 was not started.\n' >&2; exit 1; fi
+  sound=(-an)
+  if [ "$actual_audio" -gt 0 ]; then sound=(-map 0:a:0 -c:a aac -b:a "${actual_audio}k" -ac 2); fi
+  if ! ffmpeg "${common[@]}" -pass 2 "${sound[@]}" -movflags +faststart -n "$workdir/result.mp4"; then printf '[FAIL] Pass 2 failed.\n' >&2; exit 1; fi
+  # Atomic, no-clobber publication on the same filesystem. Never replaces an existing file.
+  if ! link "$workdir/result.mp4" "$output"; then printf '[FAIL] Cannot publish without overwriting (collision or filesystem lacks hard links).\n' >&2; exit 1; fi
+  bytes=$(wc -c < "$output")
+  printf '[OK] %s | %s bytes | target %s bytes\n' "$output" "$bytes" "$target_bytes"
+  if [ "$bytes" -gt "$target_bytes" ]; then printf '[OVERSIZE] Output kept. Increase margin or reduce target, then use a NEW output name.\n' >&2; exit 1; fi
+)
+succeeded=0; failed=0
+@@JOBS@@
+printf '\nSummary: %s succeeded / %s failed or oversized.\n' "$succeeded" "$failed"
+[ "$failed" -eq 0 ]
+)

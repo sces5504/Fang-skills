@@ -1,0 +1,35 @@
+name: Verify static tools
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install FFmpeg for integration tests
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Verify Pages copy
+        run: node scripts/sync-tools.mjs --check
+      - name: Test existing prompt generator and ff-tool
+        run: node --test tests/*.test.mjs
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install FFmpeg for real PowerShell encoding
+        shell: pwsh
+        run: choco install ffmpeg -y --no-progress --limit-output
+      - name: Verify Pages copy
+        run: node scripts/sync-tools.mjs --check
+      - name: Test Windows PowerShell quoting and real generated scripts
+        run: node --test tests/ff-tool.windows.test.mjs tests/prompt.test.mjs

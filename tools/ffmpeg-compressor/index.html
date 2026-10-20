@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ff-tool — FFmpeg 影片壓縮指令產生器 · Fang-skills</title>
+  <meta name="description" content="依片長與目標大小產生 FFmpeg 兩次編碼腳本。支援 macOS、PowerShell 與批次影片，不上傳檔案。">
+  <link rel="stylesheet" href="style.css"><script type="module" src="app.mjs"></script>
+</head>
+<body>
+<div class="shell">
+<header><a class="brand" href="../../"><span class="mark" aria-hidden="true">f.</span> Fang-skills <span class="brand-divider">/</span> <span class="tool-name">ff-tool</span></a><a href="https://github.com/sces5504/Fang-skills/tree/main/tools/ffmpeg-compressor" target="_blank" rel="noreferrer">使用與維護說明 ↗</a></header>
+<main>
+<section class="intro"><div><p class="eyebrow">TOOLS / VIDEO COMPRESSION</p><h1>壓小檔案，<br>保留你的<span>原始影片。</span></h1></div><div class="intro-note"><strong>先算大小，再交給 FFmpeg。</strong><p>設定每支影片的目標大小，取得兩次編碼腳本。這裡只產生文字；檔案留在你的電腦，不會上傳或在瀏覽器內轉檔。</p><span class="pill">MP4 · H.264 · 本機執行</span></div></section>
+<div class="workspace">
+<section class="card videos" aria-labelledby="videos-title">
+<div class="section-top"><div><p class="eyebrow">01 / SOURCE</p><h2 id="videos-title">來源影片</h2></div><fieldset class="segmented"><legend class="sr-only">影片模式</legend><label><input type="radio" name="mode" value="single" checked><span>單支</span></label><label><input type="radio" name="mode" value="batch"><span>批次</span></label></fieldset></div>
+<div class="drop-zone" id="drop-zone"><span aria-hidden="true">＋</span><strong>選取或拖入影片</strong><p>只讀取本機片長、尺寸與大小，不上傳檔案。</p><label class="file-button" for="files">選取影片<input id="files" type="file" accept="video/*,.mkv,.mov,.mp4,.webm,.avi" multiple></label></div>
+<p class="notice">瀏覽器通常無法取得完整路徑。選檔後仍須填入實際路徑；檔名不是完整路徑。無法讀取影片資訊時可手動補上，或留空片長讓腳本偵測。</p>
+<div id="jobs"></div>
+<div class="source-actions"><button type="button" id="add-job" hidden>＋ 加入一支影片</button><button type="button" id="examples" class="quiet">載入三支範例（需修改路徑）</button></div>
+<p id="mode-note" class="hint">批次模式會讓每支影片各自壓到相同目標大小，不合併影片。</p>
+</section>
+<section class="card settings" aria-labelledby="settings-title">
+<p class="eyebrow">02 / SETTINGS</p><h2 id="settings-title">壓縮設定</h2>
+<fieldset class="platform"><legend>執行平台</legend><label><input type="radio" name="platform" value="mac" checked> macOS <small>zsh / bash</small></label><label><input type="radio" name="platform" value="windows"> Windows <small>PowerShell 5.1+</small></label></fieldset>
+<div class="field"><label for="target">每支影片的目標大小</label><div class="size-input"><input id="target" type="number" min="0.001" step="any" value="30" inputmode="decimal"><select id="unit" aria-label="大小單位"><option>MB</option><option>MiB</option></select></div><div class="shortcuts" aria-label="常用目標大小"><button type="button" data-size="10">10</button><button type="button" data-size="25">25</button><button type="button" data-size="30" aria-pressed="true">30</button><button type="button" data-size="50">50</button><button type="button" data-size="100">100</button></div><p class="hint" id="unit-help">1 MB = 1,000,000 bytes；1 MiB = 1,048,576 bytes。</p></div>
+<div class="two-fields"><div class="field"><label for="resolution">最高解析度</label><select id="resolution"><option value="source">保留來源尺寸</option><option value="1080">最高 1080p</option><option value="720" selected>最高 720p</option><option value="480">最高 480p</option><option value="360">最高 360p</option></select></div><div class="field"><label for="fps">FPS</label><select id="fps"><option value="source">保留原始</option><option value="30">30 fps</option><option value="60">60 fps</option></select></div></div>
+<p class="hint settings-hint">等比例、不放大來源；直式影片以短邊限制，輸出為偶數寬高。保留尺寸也會向下調整奇數像素。</p>
+<div class="field"><label for="preset">編碼速度 / 品質</label><select id="preset"><option value="veryfast">veryfast — 快速</option><option value="fast">fast — 較快</option><option value="medium" selected>medium — 平衡（預設）</option><option value="slow">slow — 較慢</option></select><p class="hint">相同位元率下，較慢的 preset 通常能保留更多細節，但需要更多時間。</p></div>
+<div class="two-fields"><div class="field"><label for="audio">音訊</label><select id="audio"><option value="keep">保留第一音軌 → AAC</option><option value="remove">移除音訊</option></select></div><div class="field"><label for="audio-bitrate">AAC 位元率</label><select id="audio-bitrate"><option value="64">64 kbps</option><option value="96" selected>96 kbps</option><option value="128">128 kbps</option><option value="192">192 kbps</option></select></div></div>
+<p class="hint settings-hint">未知音軌時先預留音訊空間；腳本會實測，有音軌才編碼 AAC，無音軌則把預算留給影片。AAC 輸出為雙聲道。</p>
+<details><summary>進階：大小安全餘裕</summary><div class="field"><label for="margin">保留比例（%）</label><input id="margin" type="number" min="0" max="50" step="0.1" value="3.2"><p class="hint">預設保留 3.2% 給容器與編碼誤差，只扣一次。不能保證每次精準低於限制；數值越高，可用畫質越少。</p></div></details>
+</section>
+</div>
+<section class="output-card" aria-labelledby="output-title"><div class="output-top"><div><p class="eyebrow">03 / RUN LOCALLY</p><h2 id="output-title">你的壓縮腳本</h2></div><div class="script-actions"><button id="copy-script" type="button" disabled>複製腳本</button><button id="download-script" type="button" disabled>下載 .sh</button></div></div><p id="form-error" role="alert"></p><label for="script" class="sr-only">完整 FFmpeg 壓縮腳本</label><textarea id="script" readonly spellcheck="false" placeholder="填入影片路徑後，腳本會顯示在這裡。"></textarea><p id="script-note" class="script-note">先填來源路徑，再複製或下載腳本。片長留空時，執行前會自動偵測。</p></section>
+<section class="guide" aria-labelledby="guide-title"><h2 id="guide-title">在自己的終端機執行</h2><div class="guide-grid"><div><h3>1. 準備 FFmpeg</h3><p>先安裝含 <code>libx264</code> 的 FFmpeg 與 ffprobe，並加入 PATH。安裝方式見 <a href="https://ffmpeg.org/download.html" target="_blank" rel="noreferrer">FFmpeg 官方下載 ↗</a>。</p><p>macOS 若已使用 Homebrew，可執行 <code>brew install ffmpeg</code>。Windows 可使用官方頁面連結的 Windows build，或自行確認套件管理器來源。</p></div><div><h3>2. 下載並執行</h3><p id="run-help">macOS：在下載資料夾開啟終端機，執行 <code>bash ./ff-tool.sh</code>。也可將完整腳本貼到 zsh / bash。</p><p>相對路徑以執行時的工作資料夾為準。輸出資料夾必須已存在；既有檔案一律不覆寫。批次工作依序執行，各自有獨立暫存目錄。</p></div><div><h3>3. 確認結果</h3><p>腳本會顯示每支影片的實測片長、位元率、實際 bytes 與成功／失敗。超標的輸出仍會保留並標示；提高安全餘裕或降低目標，再換新輸出名稱重跑。</p><p>H.264、yuv420p、MP4 faststart；只處理第一影像與第一音軌，不保留其他軌道、章節與來源 metadata。原始影片保持原樣。</p></div></div>
+<details><summary>用 ffprobe 取得片長、解析度與音軌</summary><p>已帶入目前路徑，可逐行複製執行。若路徑尚未填寫，先替換範例路徑。</p><textarea id="probe" readonly aria-label="ffprobe 資訊指令" spellcheck="false"></textarea><button type="button" id="copy-probe">複製 ffprobe 指令</button></details>
+<details><summary>估算方式與限制</summary><p>可用總位元率 = 目標 bytes × (1 − 安全餘裕) × 8 ÷ 秒數；影片位元率再扣音訊預算，向下取整為十進位 kbps。下方顯示的估計大小是影像與音訊資料，不含實際容器開銷。腳本以 ffprobe 的實測片長與音軌為準，僅在無法取得有效片長時使用手動值。</p><p>低位元率、高動態內容或長片會明顯降低畫質，可改用 480p / 360p 或增加目標。檔案很短時，容器開銷占比會更高。macOS 以同磁碟的硬連結安全發布輸出；不支援硬連結的磁碟會安全失敗，不覆寫檔案。Windows 輸出以不覆寫的 Move 發布。</p></details></section>
+</main><footer><span>ff-tool · 只產生指令，不上傳、不追蹤、不保留路徑或使用紀錄。</span><a href="../../">回到 Skill Prompt 產生器 ↗</a></footer>
+</div><div id="toast" role="status" aria-live="polite"></div><noscript>請啟用 JavaScript 才能在本機產生腳本。</noscript>
+</body></html>
