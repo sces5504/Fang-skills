@@ -1,0 +1,207 @@
+{
+  "version": 1,
+  "window_id": 0,
+  "viewport": [
+    0,
+    0,
+    1,
+    1
+  ],
+  "rounds": 1,
+  "settle_key": "escape",
+  "threshold": 0.9,
+  "stable_frames": 3,
+  "unknown_seconds": 1.5,
+  "state_timeout": 40,
+  "round_timeout": 150.0,
+  "serve_timeout": 12.0,
+  "click_gap": 0.12,
+  "scroll_amount": 30,
+  "scroll_limit": 30,
+  "scroll_interval": 0.8,
+  "energy_roi": [
+    0.8326719576719577,
+    0.02959830866807611,
+    0.8591269841269841,
+    0.051268498942917545
+  ],
+  "energy_zero": "templates/energy_zero.png",
+  "expected_aspect": 1.5932560590094837,
+  "templates": {
+    "stage_list": {
+      "file": "templates/stage_list.png",
+      "roi": [
+        0.04253968253968254,
+        0.011870389884088516,
+        0.13007936507936507,
+        0.06716016859852476
+      ],
+      "grayscale": true
+    },
+    "stage_entry": {
+      "file": "templates/stage_entry.png",
+      "roi": [
+        0.008267195767195767,
+        0.11275026343519494,
+        0.16865079365079366,
+        0.9610115911485775
+      ],
+      "grayscale": true,
+      "threshold": 0.95
+    },
+    "stage_ready": {
+      "file": "templates/stage_ready.png",
+      "roi": [
+        0.21780423280423278,
+        0.15886722866174924,
+        0.28715608465608466,
+        0.22469441517386723
+      ],
+      "grayscale": true,
+      "threshold": 0.96
+    },
+    "playing": {
+      "file": "templates/playing.png",
+      "roi": [
+        0.8282539682539682,
+        0.02662276080084299,
+        0.9392724867724868,
+        0.07875131717597471
+      ]
+    },
+    "target": {
+      "file": "templates/target.png",
+      "roi": [
+        0.46978835978835976,
+        0.127781875658588,
+        0.5308730158730159,
+        0.21837197049525814
+      ]
+    },
+    "order_marker": {
+      "file": "templates/order_marker.png",
+      "roi": [
+        0.4787169312169312,
+        0.19996311907270814,
+        0.5216137566137566,
+        0.24734984193888304
+      ]
+    },
+    "result": {
+      "file": "templates/result.png",
+      "roi": [
+        0.4443253968253968,
+        0.3121670190274841,
+        0.5576587301587301,
+        0.36542283298097256
+      ],
+      "grayscale": true
+    },
+    "energy_anchor": {
+      "file": "templates/energy_anchor.png",
+      "roi": [
+        0.8447883597883598,
+        0.0156553911205074,
+        0.9045502645502645,
+        0.06573995771670191
+      ],
+      "grayscale": true
+    },
+    "result_failed": {
+      "file": "templates/result_failed.png",
+      "roi": [
+        0.4,
+        0.15,
+        0.65,
+        0.33
+      ],
+      "grayscale": true,
+      "threshold": 0.85
+    }
+  },
+  "points": {
+    "start": [
+      0.8988095238095238,
+      0.8872497365648051
+    ],
+    "cup": [
+      0.9341931216931217,
+      0.7608008429926238
+    ],
+    "material": [
+      0.8855820105820106,
+      0.6327713382507903
+    ],
+    "scroll": [
+      0.08928571428571429,
+      0.49209694415173866
+    ],
+    "close": [
+      0.6058201058201058,
+      0.7494714587737844
+    ],
+    "failed_exit": [
+      0.3955,
+      0.746
+    ]
+  },
+  "slots": [
+    [
+      0.12,
+      0.07,
+      0.38,
+      0.48
+    ],
+    [
+      0.38,
+      0.07,
+      0.6,
+      0.48
+    ],
+    [
+      0.6,
+      0.07,
+      0.78,
+      0.48
+    ]
+  ],
+  "star_rois": [
+    [
+      0.9444444444444444,
+      0.14141949152542374,
+      0.9599867724867724,
+      0.16472457627118645
+    ],
+    [
+      0.9444444444444444,
+      0.1954449152542373,
+      0.9599867724867724,
+      0.21875
+    ],
+    [
+      0.9444444444444444,
+      0.24841101694915255,
+      0.9599867724867724,
+      0.2717161016949153
+    ]
+  ],
+  "auto_trim": true,
+  "energy_anchor_center": [
+    0.8746693121693122,
+    0.040697674418604654
+  ],
+  "scroll_burst": 4,
+  "profile_revision": 8,
+  "order_search_roi": [
+    0.01,
+    0.04,
+    0.99,
+    0.56
+  ],
+  "assume_target_drink": true,
+  "delivery_timeout": 1.0,
+  "delivery_confirm_frames": 1,
+  "order_marker_threshold": 0.84,
+  "click_jitter_points": 1.0,
+  "time_jitter_seconds": 0.004
+}

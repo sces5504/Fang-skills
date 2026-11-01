@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+.pytest_cache/
+build/
+dist/
+*.egg-info/
+.DS_Store
+profile.json
+logs/
+!nte_owner/assets/preset/profile.json
