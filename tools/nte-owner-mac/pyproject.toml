@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nte-owner-mac"
+version = "0.1.12"
+description = "Foreground macOS UI assistant for NTE Owner Selection 1-1"
+requires-python = ">=3.11"
+license = {text = "GPL-3.0-only"}
+dependencies = [
+  "numpy>=2.2,<3", "opencv-python-headless>=4.11,<6", "PySide6-Essentials>=6.8,<7",
+  "pyobjc-framework-Quartz>=11,<14; sys_platform == 'darwin'",
+  "pyobjc-framework-ApplicationServices>=11,<14; sys_platform == 'darwin'",
+  "pyobjc-framework-ScreenCaptureKit>=13,<14; sys_platform == 'darwin'",
+  "pyobjc-framework-Cocoa>=11,<14; sys_platform == 'darwin'",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "pyinstaller>=6.12,<7"]
+
+[project.scripts]
+nte-owner-mac = "nte_owner.gui:main"
+
+[tool.setuptools.packages.find]
+include = ["nte_owner*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.setuptools.package-data]
+nte_owner = ["assets/preset/*.json", "assets/preset/templates/*.png"]
