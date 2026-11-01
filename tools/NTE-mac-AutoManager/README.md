@@ -1,4 +1,4 @@
-# nte-owner-mac
+# NTE-mac-AutoManager
 
 macOS（Apple Silicon）桌面小工具，自動遊玩 NTE「店長精選」的 1-1 關卡。以 ScreenCaptureKit 擷取畫面、OpenCV 比對模板，再用一般 Quartz 鍵鼠事件操作；沒有記憶體存取、注入、遊戲檔案修改、網路攔截或反作弊繞過。
 
@@ -6,14 +6,17 @@ macOS（Apple Silicon）桌面小工具，自動遊玩 NTE「店長精選」的 
 - 內建繁體中文介面的辨識預設，首次開啟自動載入，通常不需校準。支援 16:9／16:10；其他語言或 UI 縮放需重新校準。
 - 遊戲不在前景、被其他視窗遮住或視窗被關閉時立即停止；黑畫面與轉場則等待，不會盲點。
 - 只提供原始碼，沒有已簽章的安裝檔。需要 macOS 14+ 與 Apple Silicon 原生 Python 3.11。
+- 工具資料夾已改名，建置出的 App 仍叫 `NTEOwnerMac.app`，設定也沿用原位置，更新時不必重新校準。
 
 自動操作可能違反遊戲服務條款，請自行評估帳號風險。工具的點擊與時間微量變化不是用來規避偵測，也不保證不被遊戲辨識。
 
 ## 使用
 
-1. 建立 App，輸出在 `dist/NTEOwnerMac.app`：
+1. 下載原始碼並建立 App，輸出在 `dist/NTEOwnerMac.app`：
 
 ```sh
+git clone --depth 1 https://github.com/sces5504/Fang-skills.git
+cd Fang-skills/tools/NTE-mac-AutoManager
 PYTHON_BIN=python3.11 bash scripts/build_app.sh
 ```
 
@@ -24,6 +27,8 @@ PYTHON_BIN=python3.11 bash scripts/build_app.sh
 6. 局數先設 **1**（0 為無限），按「開始刷關」，5 秒內切回遊戲。工具會自動鎖定前景的 NTE 視窗，通常不需選視窗。
 
 停止方式：切回工具按停止、切到其他 App，或把滑鼠移到遊戲視窗左上角 10 點內。工具停止時不會替你暫停遊戲或補做結算。
+
+更新時在同一個資料夾執行 `git pull`，再跑一次建置，然後用新的 App 取代舊的。
 
 ## 流程
 
@@ -64,7 +69,7 @@ python3.11 -m venv .venv
 
 `python scripts/replay.py --profile <profile.json> <截圖>` 可離線檢查單張截圖，不會擷取或操作。
 
-自動測試涵蓋狀態機、辨識、保護條件與設定遷移，但不啟動遊戲。工具已在作者的 Mac 上實際跑過主要流程；0.1.12 的「挑戰失敗 → 退出」只用真實截圖驗證過，尚未在遊戲中實跑。多螢幕、外接螢幕與其他解析度也未完整驗證。repo 的 CI 只檢查靜態工具，不會執行這裡的測試，修改後要在本機跑。
+自動測試涵蓋狀態機、辨識、保護條件與設定遷移，但不啟動遊戲。工具已在作者的 Mac 上實際跑過主要流程，包含 0.1.12 的「挑戰失敗 → 退出」。多螢幕、外接螢幕與其他解析度也未完整驗證。repo 的 CI 只檢查靜態工具，不會執行這裡的測試，修改後要在本機跑。
 
 散布 App 時請另加 Developer ID 簽章與公證，並附上對應原始碼。
 
