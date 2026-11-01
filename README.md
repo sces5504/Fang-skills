@@ -51,9 +51,9 @@ Fang-skills 收錄我持續整理的 Agent Skills，將可重複的工作方法�
 
 依片長、MB／MiB 目標與音訊預算產生 macOS／PowerShell 兩次編碼腳本，支援批次。只在瀏覽器內產生文字，不上傳影片。原始碼與維護說明位於 [tools/ffmpeg-compressor/](tools/ffmpeg-compressor/)。
 
-### [nte-owner-mac — NTE 店長精選 1-1 自動遊玩](tools/nte-owner-mac/)
+### [nte-manager-script — NTE 店長精選 1-1 自動遊玩](tools/nte-manager-script/)
 
-macOS（Apple Silicon）桌面工具，以螢幕擷取與模板比對辨識畫面，再用一般鍵鼠事件做餐、結算並開始下一局；挑戰失敗時會自動退出繼續。不存取遊戲記憶體或檔案。只提供原始碼，需自行建置。使用與維護說明位於 [tools/nte-owner-mac/](tools/nte-owner-mac/)。
+macOS（Apple Silicon）桌面工具，以螢幕擷取與模板比對辨識畫面，再用一般鍵鼠事件做餐、結算並開始下一局；挑戰失敗時會自動退出繼續。不存取遊戲記憶體或檔案。只提供原始碼，需自行建置。使用與維護說明位於 [tools/nte-manager-script/](tools/nte-manager-script/)。
 
 ## 新增與維護
 
@@ -63,4 +63,4 @@ macOS（Apple Silicon）桌面工具，以螢幕擷取與模板比對辨識畫�
 
 ## 授權
 
-目前尚未為自製內容選定開源授權；公開可讀取不等於授予任意再散布權利。第三方內容依其各自授權。[tools/nte-owner-mac/](tools/nte-owner-mac/) 衍生自 GPL-3.0 專案，依 GPL-3.0-only 授權。
+目前尚未為自製內容選定開源授權；公開可讀取不等於授予任意再散布權利。第三方內容依其各自授權。[tools/nte-manager-script/](tools/nte-manager-script/) 衍生自 GPL-3.0 專案，依 GPL-3.0-only 授權。
