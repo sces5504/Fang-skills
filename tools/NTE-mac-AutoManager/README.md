@@ -1,4 +1,4 @@
-# nte-manager-script
+# NTE-mac-AutoManager
 
 macOS（Apple Silicon）桌面小工具，自動遊玩 NTE「店長精選」的 1-1 關卡。以 ScreenCaptureKit 擷取畫面、OpenCV 比對模板，再用一般 Quartz 鍵鼠事件操作；沒有記憶體存取、注入、遊戲檔案修改、網路攔截或反作弊繞過。
 
@@ -16,7 +16,7 @@ macOS（Apple Silicon）桌面小工具，自動遊玩 NTE「店長精選」的 
 
 ```sh
 git clone --depth 1 https://github.com/sces5504/Fang-skills.git
-cd Fang-skills/tools/nte-manager-script
+cd Fang-skills/tools/NTE-mac-AutoManager
 PYTHON_BIN=python3.11 bash scripts/build_app.sh
 ```
 
