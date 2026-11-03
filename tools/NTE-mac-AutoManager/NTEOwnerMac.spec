@@ -12,7 +12,7 @@ exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name='NTEOwnerMac',
 coll = COLLECT(exe, a.binaries, a.datas, strip=False, upx=False, name='NTEOwnerMac')
 app = BUNDLE(coll, name='NTEOwnerMac.app', bundle_identifier='org.local.nte-owner-mac',
              info_plist={'CFBundleDisplayName': 'NTE 店長特供',
-                         'CFBundleShortVersionString': '0.1.12',
+                         'CFBundleShortVersionString': '0.1.13',
                          'LSMinimumSystemVersion': '14.0',
                          'NSHighResolutionCapable': True,
                          'NSScreenCaptureUsageDescription': '辨識使用者選取的遊戲視窗與訂單。',
