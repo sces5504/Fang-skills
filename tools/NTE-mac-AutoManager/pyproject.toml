@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "NTE-mac-AutoManager"
-version = "0.1.12"
+version = "0.1.13"
 description = "Foreground macOS UI assistant for NTE Owner Selection 1-1"
 requires-python = ">=3.11"
 license = {text = "GPL-3.0-only"}

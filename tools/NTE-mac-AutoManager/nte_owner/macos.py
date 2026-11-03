@@ -10,6 +10,11 @@ from .config import KEYS
 from .capture import NativeCapture, CaptureError
 
 
+# Stays listed full-screen after a screenshot, with nothing visible.
+PASSTHROUGH_OVERLAYS = {'com.apple.screencaptureui'}
+OCCLUSION_GRACE_SECONDS = 3.0
+
+
 def api():
     import Quartz
     import AppKit
@@ -96,6 +101,18 @@ class GeometryChanged(RuntimeError):
     pass
 
 
+class Occluded(RuntimeError):
+    pass
+
+
+def is_passthrough_overlay(app, w):
+    pid = w.get('kCGWindowOwnerPID')
+    if pid is None:
+        return False
+    running = app.NSRunningApplication.runningApplicationWithProcessIdentifier_(int(pid))
+    return running is not None and running.bundleIdentifier() in PASSTHROUGH_OVERLAYS
+
+
 class MacSession:
     def __init__(self, window_id, stop=None):
         self.native_capture = None
@@ -111,6 +128,18 @@ class MacSession:
         self.window = candidates[0]
 
     def guard(self, input_action=False, allow_resize=False):
+        # Short-lived system panels pass on their own; nothing is sent while waiting.
+        deadline = time.monotonic()+OCCLUSION_GRACE_SECONDS
+        while True:
+            try:
+                return self._check(input_action, allow_resize)
+            except Occluded:
+                if time.monotonic() >= deadline:
+                    raise
+                if self.stop_event.wait(.1):
+                    raise InterruptedError('已停止')
+
+    def _check(self, input_action, allow_resize):
         if self.stop_event.is_set():
             raise InterruptedError('已停止')
         q, app = api()
@@ -127,11 +156,11 @@ class MacSession:
             if int(w['kCGWindowNumber']) == self.window_id:
                 break
             b = w['kCGWindowBounds']
-            if float(w.get('kCGWindowAlpha', 1)) == 0:
+            if float(w.get('kCGWindowAlpha', 1)) == 0 or is_passthrough_overlay(app, w):
                 continue
             if (b['X'] < x + width and b['X'] + b['Width'] > x and
                     b['Y'] < y + height and b['Y'] + b['Height'] > y):
-                raise RuntimeError('其他視窗／浮動面板遮住遊戲；已停止')
+                raise Occluded(f"其他視窗／浮動面板遮住遊戲（{w.get('kCGWindowOwnerName', '未知')}）；已停止")
         # Top-left of the game's window is an emergency stop corner.
         loc = q.CGEventGetLocation(q.CGEventCreate(None))
         if abs(loc.x - x) < 10 and abs(loc.y - y) < 10:
